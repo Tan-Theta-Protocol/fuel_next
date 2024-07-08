@@ -1,0 +1,8 @@
+[project]
+authors = ["TT Captain"]
+entry = "main.sw"
+license = "Apache-2.0"
+name = "US Tan-Theta Dollar"
+
+[dependencies]
+standards = { git = "https://github.com/FuelLabs/sway-standards", tag = "v0.5.1" }
