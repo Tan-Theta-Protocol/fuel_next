@@ -13,7 +13,7 @@ import {
 import { z } from "zod";
 
 interface Data {
-  name?: string;
+  message?: string;
   error?: string;
 }
 
@@ -55,7 +55,7 @@ export default async function handler(
       const txResult = await contract.functions
         .mint({ Address: { bits: deposit_address } }, subID, mintAmount)
         .call();
-      res.status(200).json({ name: txResult.transactionId });
+      res.status(200).json({ message: txResult.transactionId });
     } catch (err) {
       console.log(err);
       if (err instanceof z.ZodError) {
