@@ -2,27 +2,69 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { USTanThetaDollarAbi } from "@/sway-api";
 import { USTanThetaDollarAbi__factory } from "@/sway-api";
-import { bn, BN, getMintedAssetId, Provider, Wallet,WalletUnlocked } from "fuels";
+import {
+  bn,
+  BN,
+  getMintedAssetId,
+  Provider,
+  Wallet,
+  WalletUnlocked,
+} from "fuels";
+import { z } from "zod";
 
-type Data = {
-  name: string;
-};
+interface Data {
+  name?: string;
+  error?: string;
+}
 
-  const contractId = "0xf46b7c0b0e0fb07d3870c0d3466a894f4362889d366808aae77646981cbca5ad"
-  const privateKey = '0xfd886fd2a6b2bc061a0f32ea09000620f661b7c3cebb91707da30101d12a26ed';
-  const provider = await Provider.create("https://testnet.fuel.network/v1/graphql");
-  const wallet: WalletUnlocked = Wallet.fromPrivateKey(privateKey,provider);
-  const contract = USTanThetaDollarAbi__factory.connect(contractId, wallet);
-  const subID = "0x0000000000000000000000000000000000000000000000000000000000000000";
+const requestDataSchema = z.object({
+  amount: z.number(),
+  deposit_address: z.string(),
+});
 
+type requestData = z.infer<typeof requestDataSchema>;
+
+const contractId = process.env.CONTRACT_ID;
+if (!contractId) {
+  throw new Error("Missing contract id environment variable");
+}
+const privateKey = process.env.PRIVATE_KEY;
+if (!privateKey) {
+  throw new Error("Missing PRIVATE_KEY environment variable");
+}
+
+const provider = await Provider.create(
+  "https://testnet.fuel.network/v1/graphql"
+);
+const wallet: WalletUnlocked = Wallet.fromPrivateKey(privateKey, provider);
+const contract = USTanThetaDollarAbi__factory.connect(contractId, wallet);
+const subID =
+  "0x0000000000000000000000000000000000000000000000000000000000000000";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>,
+  res: NextApiResponse<Data>
 ) {
-  const mintedAssetId = getMintedAssetId( contract.id.toHexString(),subID);
-  console.log(mintedAssetId);
-  const mintAmount = bn(170_700_000_000);
-  const txResult = await contract.functions.mint({Address:{bits: wallet.address.toB256()}},subID, mintAmount).call();  
-  res.status(200).json({ name: txResult.transactionId });
+  if (req.method === "POST") {
+    try {
+      const body = JSON.parse(req.body);
+      const data: requestData = requestDataSchema.parse(body);
+      const { amount, deposit_address } = data;
+
+      const mintAmount = bn(amount);
+      const txResult = await contract.functions
+        .mint({ Address: { bits: deposit_address } }, subID, mintAmount)
+        .call();
+      res.status(200).json({ name: txResult.transactionId });
+    } catch (err) {
+      console.log(err);
+      if (err instanceof z.ZodError) {
+        res.status(400).json({ error: "Invalid request body" });
+      } else {
+        res.status(500).json({ error: "Internal Server Error" });
+      }
+    }
+  } else {
+    res.status(405).json({ error: "Method Not Allowed" });
+  }
 }
