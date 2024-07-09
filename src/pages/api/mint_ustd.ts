@@ -47,10 +47,12 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      const body = JSON.parse(req.body);
+      let body = req.body;
+      if(typeof(req.body)=="string") {
+        body = JSON.parse(req.body);
+      }
       const data: requestData = requestDataSchema.parse(body);
       const { amount, deposit_address } = data;
-
       const mintAmount = bn(amount);
       const txResult = await contract.functions
         .mint({ Address: { bits: deposit_address } }, subID, mintAmount)
