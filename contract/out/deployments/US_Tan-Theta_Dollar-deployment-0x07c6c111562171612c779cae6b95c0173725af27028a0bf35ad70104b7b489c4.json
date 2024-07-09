@@ -1,0 +1,9 @@
+{
+  "transaction_id": "0x42107e976fdbc0765eaf75007d49fad51c9e8d35acd1acbe75e07241f1a30827",
+  "salt": "0xc8751a8ecfaf7da4dc86dd3a6a2c9173155f22940c1bb3bad22fb6ac41f3a1fc",
+  "network_endpoint": "http://127.0.0.1:4000",
+  "chain_id": 0,
+  "contract_id": "0x07c6c111562171612c779cae6b95c0173725af27028a0bf35ad70104b7b489c4",
+  "deployment_size": 14960,
+  "deployed_block_height": 3
+}
