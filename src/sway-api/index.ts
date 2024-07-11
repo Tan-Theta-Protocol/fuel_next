@@ -4,10 +4,14 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.91.0
-  Forc version: 0.61.1
+  Fuels version: 0.90.0
+  Forc version: 0.60.0
   Fuel-Core version: 0.30.0
 */
+
+export type { YesnoTokensAbi } from './YesnoTokensAbi';
+
+export { YesnoTokensAbi__factory } from './factories/YesnoTokensAbi__factory';
 
 export type { USTanThetaDollarAbi } from './USTanThetaDollarAbi';
 
