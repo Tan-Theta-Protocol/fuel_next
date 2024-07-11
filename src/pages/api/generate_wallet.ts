@@ -13,7 +13,6 @@ export default async function handler(
 ) {
   try {
     const wallet = Wallet.generate();
-
     const walletKeys: WalletKeys = {
       privateKey: wallet.privateKey,
       publicKey: wallet.publicKey,
