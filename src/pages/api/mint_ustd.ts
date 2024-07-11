@@ -13,7 +13,7 @@ import {
 import { z } from "zod";
 
 interface Data {
-  message?: string;
+  fuelTransactionHash?: string;
   error?: string;
   status?: string;
 }
@@ -60,7 +60,7 @@ export default async function handler(
         .call();
       console.log("resp",txResult.transactionResponse);
       console.log("result",txResult.transactionResult);
-      res.status(200).json({ message: txResult.transactionId,status: txResult.transactionResult?.status});
+      res.status(200).json({ fuelTransactionHash: txResult.transactionId,status: txResult.transactionResult?.status});
     } catch (err) {
       console.log(err);
       if (err instanceof z.ZodError) {
