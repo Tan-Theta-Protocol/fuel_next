@@ -15,6 +15,7 @@ import { z } from "zod";
 interface Data {
   message?: string;
   error?: string;
+  status?: string;
 }
 
 const requestDataSchema = z.object({
@@ -57,7 +58,9 @@ export default async function handler(
       const txResult = await contract.functions
         .mint({ Address: { bits: deposit_address } }, subID, mintAmount)
         .call();
-      res.status(200).json({ message: txResult.transactionId });
+      console.log("resp",txResult.transactionResponse);
+      console.log("result",txResult.transactionResult);
+      res.status(200).json({ message: txResult.transactionId,status: txResult.transactionResult?.status});
     } catch (err) {
       console.log(err);
       if (err instanceof z.ZodError) {
