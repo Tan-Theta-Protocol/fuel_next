@@ -10,23 +10,58 @@
 */
 
 import type {
+  BigNumberish,
+  BN,
+  Bytes,
   BytesLike,
   Contract,
   DecodedValue,
   FunctionFragment,
   Interface,
   InvokeFunction,
+  StdString,
 } from 'fuels';
+
+import type { Option, Enum } from "./common";
+
+export type IdentityInput = Enum<{ Address: AddressInput, ContractId: ContractIdInput }>;
+export type IdentityOutput = Enum<{ Address: AddressOutput, ContractId: ContractIdOutput }>;
+
+export type AddressInput = { bits: string };
+export type AddressOutput = AddressInput;
+export type AssetIdInput = { bits: string };
+export type AssetIdOutput = AssetIdInput;
+export type ContractIdInput = { bits: string };
+export type ContractIdOutput = ContractIdInput;
+
+export type YesnoTokensAbiConfigurables = {
+  DECIMALS: BigNumberish;
+  NAME: string;
+  SYMBOL: string;
+  RESERVE_PREDICATE: AddressInput;
+};
 
 interface YesnoTokensAbiInterface extends Interface {
   functions: {
-    test_function: FunctionFragment;
+    burn: FunctionFragment;
+    mint: FunctionFragment;
+    decimals: FunctionFragment;
+    name: FunctionFragment;
+    symbol: FunctionFragment;
+    total_assets: FunctionFragment;
+    total_supply: FunctionFragment;
   };
 }
 
 export class YesnoTokensAbi extends Contract {
   interface: YesnoTokensAbiInterface;
   functions: {
-    test_function: InvokeFunction<[], boolean>;
+    burn: InvokeFunction<[sub_id: string, amount: BigNumberish], void>;
+    mint: InvokeFunction<[recipient: IdentityInput, sub_id: string, amount: BigNumberish], void>;
+    decimals: InvokeFunction<[asset: AssetIdInput], Option<number>>;
+    name: InvokeFunction<[asset: AssetIdInput], Option<StdString>>;
+    symbol: InvokeFunction<[asset: AssetIdInput], Option<StdString>>;
+    total_assets: InvokeFunction<[], BN>;
+    total_supply: InvokeFunction<[asset: AssetIdInput], Option<BN>>;
   };
 }

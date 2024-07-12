@@ -24,7 +24,7 @@ const requestDataSchema = z.object({
 
 type requestData = z.infer<typeof requestDataSchema>;
 
-const contractId = process.env.CONTRACT_ID;
+const contractId = process.env.USTD_CONTRACT_ID;
 if (!contractId) {
   throw new Error("Missing contract id environment variable");
 }

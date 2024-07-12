@@ -16,7 +16,7 @@ use std::{
 // In this example, all assets minted from this contract have the same decimals, name, and symbol
 configurable {
     /// The decimals of every asset minted by this contract.
-    DECIMALS: u8 = 9u8,
+    DECIMALS: u8 = 18u8,
     /// The name of every asset minted by this contract.
     NAME: str[18] = __to_str_array("Intermediary Token"),
     /// The symbol of every asset minted by this contract.
@@ -52,9 +52,9 @@ impl SRC3 for Contract {
     /// use src3::SRC3;
     /// use std::constants::DEFAULT_SUB_ID;
     ///
-    /// fn foo(contract_id: ContractId) {
-    ///     let contract_abi = abi(SRC3, contract_id);
-    ///     contract_abi.mint(Identity::ContractId(contract_id), DEFAULT_SUB_ID, 100);
+    /// fn foo(USTD_CONTRACT_ID: ContractId) {
+    ///     let contract_abi = abi(SRC3, USTD_CONTRACT_ID);
+    ///     contract_abi.mint(Identity::ContractId(USTD_CONTRACT_ID), DEFAULT_SUB_ID, 100);
     /// }
     /// ```
     #[storage(read, write)]
@@ -107,8 +107,8 @@ impl SRC3 for Contract {
     /// use src3::SRC3;
     /// use std::constants::DEFAULT_SUB_ID;
     ///
-    /// fn foo(contract_id: ContractId, asset_id: AssetId) {
-    ///     let contract_abi = abi(SRC3, contract_id);
+    /// fn foo(USTD_CONTRACT_ID: ContractId, asset_id: AssetId) {
+    ///     let contract_abi = abi(SRC3, USTD_CONTRACT_ID);
     ///     contract_abi {
     ///         gas: 10000,
     ///         coins: 100,
