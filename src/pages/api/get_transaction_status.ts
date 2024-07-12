@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 
 const client = new ApolloClient({
-    uri: 'https://testnet.fuel.network/v1/graphql', // Replace with the actual endpoint
+    uri: 'https://testnet.fuel.network/v1/graphql', 
     cache: new InMemoryCache()
   });
 

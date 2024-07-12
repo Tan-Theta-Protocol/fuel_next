@@ -2,8 +2,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { Wallet } from "fuels";
 
 type WalletKeys = {
-  privateKey: string;
-  publicKey: string;
+  private_key: string;
+  public_key: string;
   address: string;
 };
 
@@ -14,8 +14,8 @@ export default async function handler(
   try {
     const wallet = Wallet.generate();
     const walletKeys: WalletKeys = {
-      privateKey: wallet.privateKey,
-      publicKey: wallet.publicKey,
+      private_key: wallet.privateKey,
+      public_key: wallet.publicKey,
       address: wallet.address.toB256(),
     };
 
