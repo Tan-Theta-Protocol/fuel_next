@@ -21,7 +21,6 @@ export default async function handler(
 
     res.status(200).json(walletKeys);
   } catch (error) {
-    console.error("Error generating wallet:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
