@@ -13,7 +13,7 @@ import {
 import { z } from "zod";
 
 interface Data {
-  fuelTransactionHash?: string;
+  fuel_transaction_hash?: string;
   error?: string;
   status?: string;
 }
@@ -58,9 +58,7 @@ export default async function handler(
       const txResult = await contract.functions
         .mint({ Address: { bits: deposit_address } }, subID, mintAmount)
         .call();
-      console.log("resp",txResult.transactionResponse);
-      console.log("result",txResult.transactionResult);
-      res.status(200).json({ fuelTransactionHash: txResult.transactionId,status: txResult.transactionResult?.status});
+      res.status(200).json({ fuel_transaction_hash: txResult.transactionId,status: txResult.transactionResult?.status});
     } catch (err) {
       console.log(err);
       if (err instanceof z.ZodError) {
