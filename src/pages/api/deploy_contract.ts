@@ -29,6 +29,9 @@ const abi = JSON.parse(
     "utf8"
   )
 );
+const storageSlots = JSON.parse(
+  readFileSync("./contracts/yn_contract/out/release/contract-storage_slots.json", "utf-8")
+);
 
 export default async function handler(
   req: NextApiRequest,
@@ -51,6 +54,7 @@ export default async function handler(
               bits: "0xe5025c372a7af00958948961d96e67dc519606ff45ae071407085efa039de4c1",
             },
           },
+          storageSlots : storageSlots
         });
         const contractDeployment = await contract.waitForResult();
         const result = await prisma.poll_contracts_v2.create({
