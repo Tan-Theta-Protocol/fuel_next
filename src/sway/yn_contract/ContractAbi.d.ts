@@ -4,9 +4,9 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.90.0
-  Forc version: 0.60.0
-  Fuel-Core version: 0.30.0
+  Fuels version: 0.92.0
+  Forc version: 0.61.2
+  Fuel-Core version: 0.31.0
 */
 
 import type {
@@ -20,6 +20,7 @@ import type {
   Interface,
   InvokeFunction,
   StdString,
+  StrSlice,
 } from 'fuels';
 
 import type { Option, Enum } from "./common";
@@ -34,14 +35,14 @@ export type AssetIdOutput = AssetIdInput;
 export type ContractIdInput = { bits: string };
 export type ContractIdOutput = ContractIdInput;
 
-export type YesnoTokensAbiConfigurables = {
+export type ContractAbiConfigurables = {
   DECIMALS: BigNumberish;
   NAME: string;
   SYMBOL: string;
   RESERVE_PREDICATE: AddressInput;
 };
 
-interface YesnoTokensAbiInterface extends Interface {
+interface ContractAbiInterface extends Interface {
   functions: {
     burn: FunctionFragment;
     mint: FunctionFragment;
@@ -53,8 +54,8 @@ interface YesnoTokensAbiInterface extends Interface {
   };
 }
 
-export class YesnoTokensAbi extends Contract {
-  interface: YesnoTokensAbiInterface;
+export class ContractAbi extends Contract {
+  interface: ContractAbiInterface;
   functions: {
     burn: InvokeFunction<[sub_id: string, amount: BigNumberish], void>;
     mint: InvokeFunction<[recipient: IdentityInput, sub_id: string, amount: BigNumberish], void>;

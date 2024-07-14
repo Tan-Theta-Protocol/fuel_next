@@ -4,14 +4,14 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.91.0
-  Forc version: 0.61.1
-  Fuel-Core version: 0.30.0
+  Fuels version: 0.92.0
+  Forc version: 0.61.2
+  Fuel-Core version: 0.31.0
 */
 
 import { Interface, Contract, ContractFactory } from "fuels";
-import type { Provider, Account, AbstractAddress, BytesLike, DeployContractOptions, StorageSlot } from "fuels";
-import type { USTanThetaDollarAbi, USTanThetaDollarAbiInterface } from "../USTanThetaDollarAbi";
+import type { Provider, Account, AbstractAddress, BytesLike, DeployContractOptions, StorageSlot, DeployContractResult } from "fuels";
+import type { ContractAbi, ContractAbiInterface } from "../ContractAbi";
 
 const _abi = {
   "encoding": "1",
@@ -620,7 +620,7 @@ const _abi = {
         "type": 16,
         "typeArguments": null
       },
-      "offset": 14552
+      "offset": 12864
     },
     {
       "name": "NAME",
@@ -629,7 +629,7 @@ const _abi = {
         "type": 7,
         "typeArguments": null
       },
-      "offset": 14568
+      "offset": 12872
     },
     {
       "name": "SYMBOL",
@@ -638,46 +638,53 @@ const _abi = {
         "type": 8,
         "typeArguments": null
       },
-      "offset": 14600
+      "offset": 12928
+    },
+    {
+      "name": "OWNER",
+      "configurableType": {
+        "name": "",
+        "type": 9,
+        "typeArguments": []
+      },
+      "offset": 12896
     }
   ]
 };
 
 const _storageSlots: StorageSlot[] = [
   {
-    "key": "f383b0ce51358be57daa3b725fe44acdb2d880604e367199080b4379c41bb6ed",
+    "key": "b3853c2c03d9d81043ac4e2e1c051d093374ff05570080023524d02dfafab0ef",
     "value": "0000000000000000000000000000000000000000000000000000000000000000"
   }
 ];
 
-export const USTanThetaDollarAbi__factory = {
+export const ContractAbi__factory = {
   abi: _abi,
 
   storageSlots: _storageSlots,
 
-  createInterface(): USTanThetaDollarAbiInterface {
-    return new Interface(_abi) as unknown as USTanThetaDollarAbiInterface
+  createInterface(): ContractAbiInterface {
+    return new Interface(_abi) as unknown as ContractAbiInterface
   },
 
   connect(
     id: string | AbstractAddress,
     accountOrProvider: Account | Provider
-  ): USTanThetaDollarAbi {
-    return new Contract(id, _abi, accountOrProvider) as unknown as USTanThetaDollarAbi
+  ): ContractAbi {
+    return new Contract(id, _abi, accountOrProvider) as unknown as ContractAbi
   },
 
   async deployContract(
     bytecode: BytesLike,
     wallet: Account,
     options: DeployContractOptions = {}
-  ): Promise<USTanThetaDollarAbi> {
+  ): Promise<DeployContractResult<ContractAbi>> {
     const factory = new ContractFactory(bytecode, _abi, wallet);
 
-    const contract = await factory.deployContract({
+    return factory.deployContract<ContractAbi>({
       storageSlots: _storageSlots,
       ...options,
     });
-
-    return contract as unknown as USTanThetaDollarAbi;
-  }
+  },
 }

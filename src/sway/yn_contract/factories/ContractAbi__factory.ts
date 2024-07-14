@@ -4,14 +4,14 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.90.0
-  Forc version: 0.60.0
-  Fuel-Core version: 0.30.0
+  Fuels version: 0.92.0
+  Forc version: 0.61.2
+  Fuel-Core version: 0.31.0
 */
 
 import { Interface, Contract, ContractFactory } from "fuels";
-import type { Provider, Account, AbstractAddress, BytesLike, DeployContractOptions, StorageSlot } from "fuels";
-import type { YesnoTokensAbi, YesnoTokensAbiInterface } from "../YesnoTokensAbi";
+import type { Provider, Account, AbstractAddress, BytesLike, DeployContractOptions, StorageSlot, DeployContractResult } from "fuels";
+import type { ContractAbi, ContractAbiInterface } from "../ContractAbi";
 
 const _abi = {
   "encoding": "1",
@@ -351,13 +351,13 @@ const _abi = {
         {
           "name": "doc-comment",
           "arguments": [
-            " fn foo(USTD_CONTRACT_ID: ContractId, asset_id: AssetId) {"
+            " fn foo(contract_id: ContractId, asset_id: AssetId) {"
           ]
         },
         {
           "name": "doc-comment",
           "arguments": [
-            "     let contract_abi = abi(SRC3, USTD_CONTRACT_ID);"
+            "     let contract_abi = abi(SRC3, contract_id);"
           ]
         },
         {
@@ -557,19 +557,19 @@ const _abi = {
         {
           "name": "doc-comment",
           "arguments": [
-            " fn foo(USTD_CONTRACT_ID: ContractId) {"
+            " fn foo(contract_id: ContractId) {"
           ]
         },
         {
           "name": "doc-comment",
           "arguments": [
-            "     let contract_abi = abi(SRC3, USTD_CONTRACT_ID);"
+            "     let contract_abi = abi(SRC3, contract_id);"
           ]
         },
         {
           "name": "doc-comment",
           "arguments": [
-            "     contract_abi.mint(Identity::ContractId(USTD_CONTRACT_ID), DEFAULT_SUB_ID, 100);"
+            "     contract_abi.mint(Identity::ContractId(contract_id), DEFAULT_SUB_ID, 100);"
           ]
         },
         {
@@ -746,7 +746,7 @@ const _abi = {
         "type": 16,
         "typeArguments": null
       },
-      "offset": 18856
+      "offset": 14840
     },
     {
       "name": "NAME",
@@ -755,7 +755,7 @@ const _abi = {
         "type": 7,
         "typeArguments": null
       },
-      "offset": 18864
+      "offset": 14848
     },
     {
       "name": "SYMBOL",
@@ -764,7 +764,7 @@ const _abi = {
         "type": 8,
         "typeArguments": null
       },
-      "offset": 18896
+      "offset": 14904
     },
     {
       "name": "RESERVE_PREDICATE",
@@ -773,46 +773,44 @@ const _abi = {
         "type": 9,
         "typeArguments": []
       },
-      "offset": 18800
+      "offset": 14872
     }
   ]
 };
 
 const _storageSlots: StorageSlot[] = [
   {
-    "key": "f383b0ce51358be57daa3b725fe44acdb2d880604e367199080b4379c41bb6ed",
+    "key": "93b67ee4f0f76b71456fb4385c86aec15689e1ce5f6f6ac63b71716afa052998",
     "value": "0000000000000000000000000000000000000000000000000000000000000000"
   }
 ];
 
-export const YesnoTokensAbi__factory = {
+export const ContractAbi__factory = {
   abi: _abi,
 
   storageSlots: _storageSlots,
 
-  createInterface(): YesnoTokensAbiInterface {
-    return new Interface(_abi) as unknown as YesnoTokensAbiInterface
+  createInterface(): ContractAbiInterface {
+    return new Interface(_abi) as unknown as ContractAbiInterface
   },
 
   connect(
     id: string | AbstractAddress,
     accountOrProvider: Account | Provider
-  ): YesnoTokensAbi {
-    return new Contract(id, _abi, accountOrProvider) as unknown as YesnoTokensAbi
+  ): ContractAbi {
+    return new Contract(id, _abi, accountOrProvider) as unknown as ContractAbi
   },
 
   async deployContract(
     bytecode: BytesLike,
     wallet: Account,
     options: DeployContractOptions = {}
-  ): Promise<YesnoTokensAbi> {
+  ): Promise<DeployContractResult<ContractAbi>> {
     const factory = new ContractFactory(bytecode, _abi, wallet);
 
-    const contract = await factory.deployContract({
+    return factory.deployContract<ContractAbi>({
       storageSlots: _storageSlots,
       ...options,
     });
-
-    return contract as unknown as YesnoTokensAbi;
-  }
+  },
 }

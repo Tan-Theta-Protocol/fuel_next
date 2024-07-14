@@ -19,6 +19,8 @@ configurable {
     NAME: str[18] = __to_str_array("US TanTheta Dollar"),
     /// The symbol of the asset minted by this contract.
     SYMBOL: str[4] = __to_str_array("USTD"),
+    /// Owner of this contract which will be able to mint tokens.
+    OWNER: Address = Address::from(0x0000000000000000000000000000000000000000000000000000000000000000),
 }
 
 storage {
@@ -46,6 +48,14 @@ impl SRC3 for Contract {
     ///
     #[storage(read, write)]
     fn mint(recipient: Identity, sub_id: SubId, amount: u64) {
+        // // Only owner must be able to mint tokens
+        let sender = msg_sender().unwrap();
+        if let Identity::Address(addr) = sender {
+            require(addr == OWNER, "Not authorized");
+        } else {
+            revert(0);
+        }
+
         require(sub_id == DEFAULT_SUB_ID, "Incorrect Sub Id");
 
         // Increment total supply of the asset and mint to the recipient.

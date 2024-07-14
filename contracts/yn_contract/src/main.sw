@@ -13,7 +13,6 @@ use std::{
     string::String,
 };
 
-// In this example, all assets minted from this contract have the same decimals, name, and symbol
 configurable {
     /// The decimals of every asset minted by this contract.
     DECIMALS: u8 = 18u8,
@@ -52,19 +51,20 @@ impl SRC3 for Contract {
     /// use src3::SRC3;
     /// use std::constants::DEFAULT_SUB_ID;
     ///
-    /// fn foo(USTD_CONTRACT_ID: ContractId) {
-    ///     let contract_abi = abi(SRC3, USTD_CONTRACT_ID);
-    ///     contract_abi.mint(Identity::ContractId(USTD_CONTRACT_ID), DEFAULT_SUB_ID, 100);
+    /// fn foo(contract_id: ContractId) {
+    ///     let contract_abi = abi(SRC3, contract_id);
+    ///     contract_abi.mint(Identity::ContractId(contract_id), DEFAULT_SUB_ID, 100);
     /// }
     /// ```
     #[storage(read, write)]
     fn mint(recipient: Identity, sub_id: SubId, amount: u64) {
-        
+
         // Check that recipient is the predicate address else revert
-        match recipient {
-            Identity::Address(addr) => assert(addr == RESERVE_PREDICATE),
-            _ => revert(0),
-        };
+        if let Identity::Address(addr) = recipient {
+            require(addr == RESERVE_PREDICATE, "Minting only allowed to whitelisted reserve predicates");
+        } else {
+            revert(0);
+        }
 
         let asset_id = AssetId::new(ContractId::this(), sub_id);
 
@@ -107,8 +107,8 @@ impl SRC3 for Contract {
     /// use src3::SRC3;
     /// use std::constants::DEFAULT_SUB_ID;
     ///
-    /// fn foo(USTD_CONTRACT_ID: ContractId, asset_id: AssetId) {
-    ///     let contract_abi = abi(SRC3, USTD_CONTRACT_ID);
+    /// fn foo(contract_id: ContractId, asset_id: AssetId) {
+    ///     let contract_abi = abi(SRC3, contract_id);
     ///     contract_abi {
     ///         gas: 10000,
     ///         coins: 100,

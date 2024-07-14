@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { bn, Provider, Wallet, WalletUnlocked } from "fuels";
 import { z } from "zod";
-import { YesnoTokensAbi__factory } from "@/sway-api";
+import { ContractAbi__factory } from "@/sway/yn_contract";
 
 
 export default async function handler(
@@ -21,7 +21,7 @@ export default async function handler(
       "https://testnet.fuel.network/v1/graphql"
     );
     const wallet: WalletUnlocked = Wallet.fromPrivateKey(privateKey, provider);
-    const contract = YesnoTokensAbi__factory.connect(contractId, wallet);
+    const contract = ContractAbi__factory.connect(contractId, wallet);
     const yesSubID = "0x0000000000000000000000000000000000000000000000000000000000000000";
     const noSubID = "0x0000000000000000000000000000000000000000000000000000000000000001";
 
@@ -37,15 +37,18 @@ export default async function handler(
     console.log(data);
     const { poll_id } = data;
     const amount = bn(100_000_000_000_000_000_000_000_000);
-    const yesTxResult = await contract.functions
-        .mint({ Address: { bits: "0xe5025c372a7af00958948961d96e67dc519606ff45ae071407085efa039de4c1" } }, yesSubID, amount)
-        .call();
-    console.log(yesTxResult.transactionId);
-    const noTxResult = await contract.functions
-        .mint({ Address: { bits: "0xe5025c372a7af00958948961d96e67dc519606ff45ae071407085efa039de4c1" } }, noSubID, amount)
-        .call();
-    console.log(noTxResult.transactionId);
-    res.status(200).json({"yes":yesTxResult.transactionResult.id,"no":noTxResult.transactionResult.id});
+    
+    const yesTokenMint = await contract.functions
+        .mint({ Address: { bits: "0xe5025c372a7af00958948961d96e67dc519606ff45ae071407085efa039de4c1" } }, yesSubID, amount);
+    const yesTokenMintTxn = await (await yesTokenMint.call()).waitForResult()
+    console.log("YES tokens minted. Txn Id : ",yesTokenMintTxn.transactionId);
+    
+    const noTokenMint = await contract.functions
+        .mint({ Address: { bits: "0xe5025c372a7af00958948961d96e67dc519606ff45ae071407085efa039de4c1" } }, noSubID, amount);
+    const noTokenMintTxn = await (await noTokenMint.call()).waitForResult();
+    console.log("NO tokens minted. Txn Id : ",noTokenMintTxn.transactionId);
+
+    res.status(200).json({"yes":yesTokenMintTxn.transactionId,"no":noTokenMintTxn.transactionId});
   } catch (error) {
     console.error("Error generating wallet:", error);
     res.status(500).json({ error: "Internal Server Error" });
