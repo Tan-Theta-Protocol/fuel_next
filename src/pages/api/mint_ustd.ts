@@ -1,7 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import type { USTanThetaDollarAbi } from "@/sway-api";
-import { USTanThetaDollarAbi__factory } from "@/sway-api";
 import {
   bn,
   BN,
@@ -11,6 +9,7 @@ import {
   WalletUnlocked,
 } from "fuels";
 import { z } from "zod";
+import {  ContractAbi__factory } from "@/sway/ustd_contract";
 
 interface Data {
   fuel_transaction_hash?: string;
@@ -38,7 +37,7 @@ const provider = await Provider.create(
   "https://testnet.fuel.network/v1/graphql"
 );
 const wallet: WalletUnlocked = Wallet.fromPrivateKey(privateKey, provider);
-const contract = USTanThetaDollarAbi__factory.connect(contractId, wallet);
+const contract = ContractAbi__factory.connect(contractId, wallet);
 const subID =
   "0x0000000000000000000000000000000000000000000000000000000000000000";
 
@@ -55,10 +54,11 @@ export default async function handler(
       const data: requestData = requestDataSchema.parse(body);
       const { amount, deposit_address } = data;
       const mintAmount = bn(amount);
-      const txResult = await contract.functions
-        .mint({ Address: { bits: deposit_address } }, subID, mintAmount)
-        .call();
-      res.status(200).json({ fuel_transaction_hash: txResult.transactionId,status: txResult.transactionResult?.status});
+      const ustdTokenMint = await contract.functions
+        .mint({ Address: { bits: deposit_address } }, subID, mintAmount);
+      const ustdTokenMintTxn = await (await ustdTokenMint.call()).waitForResult()
+    
+      res.status(200).json({ fuel_transaction_hash: ustdTokenMintTxn.transactionId,status: ustdTokenMintTxn.transactionResult?.status});
     } catch (err) {
       console.log(err);
       if (err instanceof z.ZodError) {

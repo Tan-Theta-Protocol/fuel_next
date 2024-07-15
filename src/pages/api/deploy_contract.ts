@@ -21,13 +21,16 @@ const provider = await Provider.create(
 );
 const wallet: WalletUnlocked = Wallet.fromPrivateKey(privateKey, provider);
 const byteCode = readFileSync(
-  "./contracts/yes_no_contract/out/debug/yesno_tokens.bin"
+  "./contracts/yn_contract/out/release/contract.bin"
 );
 const abi = JSON.parse(
   readFileSync(
-    "./contracts/yes_no_contract/out/debug/yesno_tokens-abi.json",
+    "./contracts/yn_contract/out/release/contract-abi.json",
     "utf8"
   )
+);
+const storageSlots = JSON.parse(
+  readFileSync("./contracts/yn_contract/out/release/contract-storage_slots.json", "utf-8")
 );
 
 export default async function handler(
@@ -51,14 +54,16 @@ export default async function handler(
               bits: "0xe5025c372a7af00958948961d96e67dc519606ff45ae071407085efa039de4c1",
             },
           },
+          storageSlots : storageSlots
         });
+        const contractDeployment = await contract.waitForResult();
         const result = await prisma.poll_contracts_v2.create({
           data: {
             poll_id: data.poll_id,
-            contract_id: contract.id.toHexString(),
+            contract_id: contract.contractId,
           },
         });
-        res.status(200).json({ contract_id: contract.id.toHexString() });
+        res.status(200).json({ contract_id: contract.contractId });
       } catch (err) {
         if (err instanceof z.ZodError) {
           res.status(400).json({ error: "Invalid request body" });

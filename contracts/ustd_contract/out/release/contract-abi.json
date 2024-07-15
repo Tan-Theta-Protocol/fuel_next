@@ -605,7 +605,7 @@
         "type": 16,
         "typeArguments": null
       },
-      "offset": 14552
+      "offset": 12864
     },
     {
       "name": "NAME",
@@ -614,7 +614,7 @@
         "type": 7,
         "typeArguments": null
       },
-      "offset": 14568
+      "offset": 12872
     },
     {
       "name": "SYMBOL",
@@ -623,7 +623,16 @@
         "type": 8,
         "typeArguments": null
       },
-      "offset": 14600
+      "offset": 12928
+    },
+    {
+      "name": "OWNER",
+      "configurableType": {
+        "name": "",
+        "type": 9,
+        "typeArguments": []
+      },
+      "offset": 12896
     }
   ]
 }

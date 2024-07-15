@@ -4,9 +4,9 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.91.0
-  Forc version: 0.61.1
-  Fuel-Core version: 0.30.0
+  Fuels version: 0.92.0
+  Forc version: 0.61.2
+  Fuel-Core version: 0.31.0
 */
 
 import type {
@@ -35,13 +35,14 @@ export type AssetIdOutput = AssetIdInput;
 export type ContractIdInput = { bits: string };
 export type ContractIdOutput = ContractIdInput;
 
-export type USTanThetaDollarAbiConfigurables = {
+export type ContractAbiConfigurables = {
   DECIMALS: BigNumberish;
   NAME: string;
   SYMBOL: string;
+  OWNER: AddressInput;
 };
 
-interface USTanThetaDollarAbiInterface extends Interface {
+interface ContractAbiInterface extends Interface {
   functions: {
     burn: FunctionFragment;
     mint: FunctionFragment;
@@ -53,8 +54,8 @@ interface USTanThetaDollarAbiInterface extends Interface {
   };
 }
 
-export class USTanThetaDollarAbi extends Contract {
-  interface: USTanThetaDollarAbiInterface;
+export class ContractAbi extends Contract {
+  interface: ContractAbiInterface;
   functions: {
     burn: InvokeFunction<[sub_id: string, amount: BigNumberish], void>;
     mint: InvokeFunction<[recipient: IdentityInput, sub_id: string, amount: BigNumberish], void>;
