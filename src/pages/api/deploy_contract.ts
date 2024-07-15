@@ -80,7 +80,6 @@ export default async function handler(
         if (err instanceof z.ZodError) {
           res.status(400).json({ error: "Invalid request body" });
         } else {
-          console.log(err);
           res.status(500).json({ error: "Internal Server Error" });
         }
       }
