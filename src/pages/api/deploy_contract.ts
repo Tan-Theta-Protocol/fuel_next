@@ -40,16 +40,16 @@ const provider = await Provider.create(
 );
 const wallet: WalletUnlocked = Wallet.fromPrivateKey(privateKey, provider);
 const byteCode = readFileSync(
-  "./contracts/yn_contract/out/debug/contract.bin"
+  "./contracts/yn_contract/out/release/contract.bin"
 );
 const abi = JSON.parse(
-  readFileSync(
-    "./contracts/yn_contract/out/debug/contract-abi.json",
-    "utf8"
-  )
+  readFileSync("./contracts/yn_contract/out/release/contract-abi.json", "utf8")
 );
 const storageSlots = JSON.parse(
-  readFileSync("./contracts/yn_contract/out/debug/contract-storage_slots.json", "utf-8")
+  readFileSync(
+    "./contracts/yn_contract/out/release/contract-storage_slots.json",
+    "utf-8"
+  )
 );
 
 export default async function handler(
@@ -65,7 +65,6 @@ export default async function handler(
         }
 
         const data: requestData = requestDataSchema.parse(body);
-        console.log(data)
         const factory = new ContractFactory(byteCode, abi, wallet);
         const contract = await factory.deployContract({
           configurableConstants: {
@@ -73,7 +72,7 @@ export default async function handler(
               bits: "0xe5025c372a7af00958948961d96e67dc519606ff45ae071407085efa039de4c1",
             },
           },
-          storageSlots : storageSlots
+          storageSlots: storageSlots,
         });
         const contractDeployment = await contract.waitForResult();
         res.status(200).json({ contract_id: contract.contractId });
@@ -89,7 +88,6 @@ export default async function handler(
       res.status(405).json({ error: "Method Not Allowed" });
     }
   } catch (error) {
-     
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
