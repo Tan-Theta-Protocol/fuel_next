@@ -57,13 +57,18 @@ export default async function handler(
           storageSlots : storageSlots
         });
         const contractDeployment = await contract.waitForResult();
-        const result = await prisma.poll_contracts_v2.create({
-          data: {
-            poll_id: data.poll_id,
-            contract_id: contract.contractId,
-          },
-        });
-        res.status(200).json({ contract_id: contract.contractId });
+        if (contractDeployment.transactionResult.isStatusSuccess) {
+          await prisma.poll_contracts_v2.create({
+            data: {
+              poll_id: data.poll_id,
+              contract_id: contract.contractId,
+            },
+          });
+          res.status(200).json({ contract_id: contract.contractId });
+        } else {
+          res.status(500).json({ message: "Something went wrong" });
+        }
+        
       } catch (err) {
         if (err instanceof z.ZodError) {
           res.status(400).json({ error: "Invalid request body" });
