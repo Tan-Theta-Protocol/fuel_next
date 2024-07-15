@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@apollo/client": "^3.10.8",
-    "@prisma/client": "^5.16.2",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "fuels": "^0.92.0",
