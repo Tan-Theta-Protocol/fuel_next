@@ -3,31 +3,33 @@ import { bn, ContractFactory, Provider, Wallet, WalletUnlocked } from "fuels";
 import { readFileSync } from "fs";
 import { z } from "zod";
 
-const requestDataSchema = z.object({
-  id: z.number(),
-  creatorId: z.string(),
-  title: z.string(),
-  subtitle: z.string().optional(),
-  description: z.string(),
-  stats: z.string(),
-  category: z.string(),
-  imageUrl: z.string(),
-  isFeatured: z.boolean(),
-  subcategory: z.string().optional(),
-  expiry: z.string().refine((val) => !isNaN(Date.parse(val)), {
-    message: "Invalid date format",
-  }),
-  settlementDate: z.string().refine((val) => !isNaN(Date.parse(val)), {
-    message: "Invalid date format",
-  }),
-  tradingVolume: z.number(),
-  source: z.string(),
-  resolution: z.string(),
-  isOrderbookEvent: z.boolean(),
-  createdAt: z.string().refine((val) => !isNaN(Date.parse(val)), {
-    message: "Invalid date format",
-  }),
-});
+const requestDataSchema = z
+  .object({
+    id: z.number(),
+    creatorId: z.string(),
+    title: z.string(),
+    subtitle: z.string().optional(),
+    description: z.string(),
+    stats: z.string(),
+    category: z.string(),
+    imageUrl: z.string(),
+    isFeatured: z.boolean(),
+    subcategory: z.string().optional(),
+    expiry: z.string().refine((val) => !isNaN(Date.parse(val)), {
+      message: "Invalid date format",
+    }),
+    settlementDate: z.string().refine((val) => !isNaN(Date.parse(val)), {
+      message: "Invalid date format",
+    }),
+    tradingVolume: z.number(),
+    source: z.string(),
+    resolution: z.string(),
+    isOrderbookEvent: z.boolean(),
+    createdAt: z.string().refine((val) => !isNaN(Date.parse(val)), {
+      message: "Invalid date format",
+    }),
+  })
+  .strict();
 
 type requestData = z.infer<typeof requestDataSchema>;
 
@@ -64,7 +66,7 @@ export default async function handler(
           body = JSON.parse(req.body);
         }
 
-        const data: requestData = requestDataSchema.parse(body);
+        const data: requestData = requestDataSchema.safeParse(body);
         const factory = new ContractFactory(byteCode, abi, wallet);
         const contract = await factory.deployContract({
           configurableConstants: {
