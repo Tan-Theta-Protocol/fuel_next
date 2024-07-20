@@ -66,7 +66,7 @@ export default async function handler(
           body = JSON.parse(req.body);
         }
 
-        const data: requestData = requestDataSchema.safeParse(body);
+        // const data: requestData = requestDataSchema.safeParse(body);
         const factory = new ContractFactory(byteCode, abi, wallet);
         const contract = await factory.deployContract({
           configurableConstants: {
